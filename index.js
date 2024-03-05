@@ -50,10 +50,40 @@ async function run() {
         res.status(500).send({ error: error.message });
       }
     });
-        // API endpointAssignments
+    
+    // API endpoint Assignments
+    app.get('/assignment', async (req, res) => {
+      const result = await assignmentCollection.find().toArray();
+      res.send(result)
+    })
+    app.get('/assignment/:id', async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await assignmentCollection.findOne(query);
+      res.send(result)
+    })
+    app.post('/assignment', async (req, res) => {
+      const assignment = req.body;
+      const result = await assignmentCollection.insertOne(assignment);
+      res.send(result)
+    })
+    app.patch('/assignment/:id', async (req, res) => {
+      const id = req.params.id;
+      const filter = { _id: new ObjectId(id) };
+      const assignment = req.body;
+      const option = { upsert: true };
+      const updateDoc = {
+        $set: {
+          name: assignment.name,
+          description: assignment.description,
+          image: assignment.image,
+        
+        }
+      }
+      const result = await assignmentCollection.updateOne(filter, updateDoc, option);
+      res.send(result)
+    })
 
-
-    //'s API endpoint
     
   
 
