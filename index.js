@@ -23,9 +23,10 @@ async function run() {
     // await client.connect();
 
     // databse collections
-    const database = client.db("BytopiaTechShopDB");
+    const database = client.db("EduMate");
     const assignmentCollection = database.collection("assignments");
     const userCollection = database.collection("users");
+    const feedbackCollection = database.collection("feedbacks");
 
     // API endpoints
     // API endpoints User
@@ -84,7 +85,22 @@ async function run() {
       res.send(result)
     })
 
-    
+    // API endpoint Feedback
+    app.post('/feedback', async (req, res) => {
+      const feedback = req.body;
+      const result = await feedbackCollection.insertOne(feedback);
+      res.send(result)
+    })
+    app.get('/feedback', async (req, res) => {
+      const result = await feedbackCollection.find().toArray();
+      res.send(result)
+    })
+    // app.get('/feedback/:id', async (req, res) => {
+    //   const id = req.params.id;
+    //   const query = { _id: new ObjectId(id) };
+    //   const result = await feedbackCollection.findOne(query);
+    //   res.send(result)
+    // })
   
 
     await client.db("admin").command({ ping: 1 });
